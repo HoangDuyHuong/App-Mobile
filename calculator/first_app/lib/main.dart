@@ -32,7 +32,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   double _firstNumber = 0;
   String _operation = '';
   bool _shouldClearDisplay = false;
-  String _expressionDisplay = '';  // Để hiển thị biểu thức toán học
+  String _expressionDisplay = '';
   bool _operationJustPressed = false;
 
   void _onNumberClick(String number) {
@@ -49,21 +49,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void _onOperationClick(String operation) {
     if (_operationJustPressed) {
-      // Nếu người dùng đã ấn một phép toán và ấn phép toán khác, thay thế phép toán cũ
       setState(() {
         _operation = operation;
         _expressionDisplay = '${_firstNumber.toString()} $operation';
       });
       return;
     }
-    
+
     setState(() {
       _firstNumber = double.parse(_displayValue);
       _operation = operation;
       _shouldClearDisplay = true;
       _operationJustPressed = true;
-      
-      // Cập nhật hiển thị biểu thức
       _expressionDisplay = '${_displayValue.toString()} $operation';
     });
   }
@@ -73,7 +70,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       if (_operation.isNotEmpty) {
         double secondNumber = double.parse(_displayValue);
         double result = 0;
-        
+
         switch (_operation) {
           case '+':
             result = _firstNumber + secondNumber;
@@ -89,9 +86,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             break;
         }
 
-        // Hiển thị biểu thức đầy đủ
         _expressionDisplay = '$_firstNumber $_operation $secondNumber = ';
-        
         _displayValue = result % 1 == 0 ? result.toInt().toString() : result.toString();
         _operation = '';
         _firstNumber = result;
@@ -148,7 +143,32 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Display area
+            // Thông tin tên và MSSV
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Column(
+                children: const [
+                  Text(
+                    'Hoàng Duy Hướng',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '22119187',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Khu vực hiển thị biểu thức & kết quả
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -157,7 +177,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    // Expression display
                     Text(
                       _expressionDisplay,
                       style: const TextStyle(
@@ -168,7 +187,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       textAlign: TextAlign.right,
                     ),
                     const SizedBox(height: 8),
-                    // Result display
                     Text(
                       _displayValue,
                       style: TextStyle(
@@ -184,8 +202,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 ),
               ),
             ),
-            
-            // Buttons area
+
+            // Khu vực các nút bấm
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -248,12 +266,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Widget _buildButton(String text, {
-    required Color color, 
-    Color textColor = Colors.white, 
-    bool isWide = false
+    required Color color,
+    Color textColor = Colors.white,
+    bool isWide = false,
   }) {
     double buttonSize = (MediaQuery.of(context).size.width - 64) / 4;
-    
+
     return Container(
       width: isWide ? buttonSize * 2 + 8 : buttonSize,
       height: buttonSize,
@@ -298,9 +316,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          shape: isWide 
-              ? const StadiumBorder() 
-              : const CircleBorder(),
+          shape: isWide ? const StadiumBorder() : const CircleBorder(),
           padding: EdgeInsets.zero,
           elevation: 0,
         ),
